@@ -19,15 +19,15 @@ interface MemoDao {
     @Query("select * from memos order by id")
     fun getAll(): Flow<List<Memo>>
 }
-/* suspend
+/*
+* suspend
  -시간이 오래 걸릴 수 있는 작업 (Room DB) -> 비동기 처리
  -일시 중단 가능 -> UI 스레드 차단x
- */
 
-/* Flow
+* Flow
  -비동기 데이터 스트림
  -순차적 데이터 업데이트
  -Cold 스트림 : 데이터를 요청하기 전까지 실행 안 함
  -Backpressure : 데이터 방출 속도 조절
- -> LiveData는 UI와 강하게 결합되어 있음
+ (LiveData -> UI와의 강한 결합)
  */
