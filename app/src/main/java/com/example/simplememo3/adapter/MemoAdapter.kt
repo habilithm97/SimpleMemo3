@@ -13,7 +13,10 @@ class MemoAdapter : ListAdapter<Memo, MemoAdapter.MemoViewHolder>(DIFF_CALLBACK)
     inner class MemoViewHolder(private val binding: ItemMemoBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(memo: Memo) {
-            binding.tvContent.text = memo.content
+            binding.apply {
+                this.memo = memo
+                executePendingBindings() // 데이터 바인딩 후 즉시 UI 업데이트
+            }
         }
     }
 
