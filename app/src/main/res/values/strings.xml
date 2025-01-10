@@ -1,3 +1,4 @@
 <resources>
-    <string name="app_name">SimpleMemo3</string>
+    <string name="app_name">심플메모</string>
+    <string name="memo">메모</string>
 </resources>

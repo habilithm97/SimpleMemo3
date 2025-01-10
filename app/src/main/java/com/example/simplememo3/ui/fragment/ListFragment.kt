@@ -38,6 +38,7 @@ class ListFragment : Fragment() {
             fab.setOnClickListener {
                 parentFragmentManager.beginTransaction()
                     .replace(R.id.container, MemoFragment())
+                    .addToBackStack(null) // 백 스택에 추가
                     .commit()
             }
         }
