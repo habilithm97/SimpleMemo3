@@ -10,6 +10,6 @@ import androidx.room.PrimaryKey
  */
 @Entity(tableName = "memos")
 data class Memo(
-    @PrimaryKey(autoGenerate = true) val id: Int,
+    @PrimaryKey(autoGenerate = true) val id: Int = 0,
     @ColumnInfo(name = "content") var content: String
 )
