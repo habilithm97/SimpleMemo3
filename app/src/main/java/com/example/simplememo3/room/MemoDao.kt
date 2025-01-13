@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
 
 /* DAO (Data Access Object)
@@ -15,6 +16,9 @@ import kotlinx.coroutines.flow.Flow
 interface MemoDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertMemo(memo: Memo)
+
+    @Update
+    suspend fun updateMemo(memo: Memo)
 
     @Query("select * from memos order by id")
     fun getAll(): Flow<List<Memo>>

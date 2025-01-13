@@ -1,6 +1,7 @@
 package com.example.simplememo3.ui.fragment
 
 import android.content.Context
+import android.os.Build
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -18,7 +19,7 @@ class MemoFragment : Fragment() {
     private val binding get() = _binding!! // 항상 null-safe한 접근 가능
     private val memoViewModel: MemoViewModel by viewModels()
 
-    private var previousMemo = ""
+    private var previousMemo: Memo? = null // 받아온 메모 저장
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -32,6 +33,17 @@ class MemoFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         // MainActivity 툴바에 업 버튼 활성화
         (activity as? MainActivity)?.showUpButton(true)
+
+        // 받아온 메모를 previousMemo에 저장
+        previousMemo = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            arguments?.getParcelable("memo", Memo::class.java)
+        } else {
+            @Suppress("DEPRECATION") // API 33 미만 호환성 처리
+            arguments?.getParcelable("memo")
+        }
+        if (previousMemo != null) {
+            binding.edtMemo.setText(previousMemo!!.content)
+        }
     }
 
     override fun onResume() {
@@ -47,15 +59,27 @@ class MemoFragment : Fragment() {
 
         val currentMemo = binding.edtMemo.text.toString()
 
-        // 입력창이 비어있지 않고, 이전 메모와 다르면
-        if (currentMemo.isNotBlank() && currentMemo != previousMemo) {
-            newMemo(currentMemo)
+        // 메모가 비어있지 않고, 이전 메모와 다를 경우에만 처리
+        if (currentMemo.isNotBlank() && currentMemo != previousMemo?.content) {
+            if (previousMemo != null) { // 수정 모드
+                updateMemo(currentMemo)
+            } else { // 추가 모드
+                newMemo(currentMemo)
+            }
         }
     }
 
     private fun newMemo(memoStr: String) {
         val memo = Memo(content = memoStr)
         memoViewModel.insertMemo(memo)
+    }
+
+    private fun updateMemo(memoStr: String) {
+        // 이전 메모를 복사하여 새로운 객체 생성
+        val updatedMemo = previousMemo?.copy(content = memoStr)
+        if (updatedMemo != null) {
+            memoViewModel.updateMemo(updatedMemo)
+        }
     }
 
     override fun onDestroyView() {

@@ -38,6 +38,12 @@ class MemoViewModel(application: Application) : AndroidViewModel(application) {
             memoRepository.insertMemo(memo)
         }
     }
+
+    fun updateMemo(memo: Memo) {
+        viewModelScope.launch(Dispatchers.IO) {
+            memoRepository.updateMemo(memo)
+        }
+    }
 }
 /*
 * viewModelScope : ViewModel의 생명주기 내에서 안전하게 작업 실행
