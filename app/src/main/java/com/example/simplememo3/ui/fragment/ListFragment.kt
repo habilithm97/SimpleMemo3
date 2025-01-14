@@ -9,6 +9,7 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.simplememo3.R
 import com.example.simplememo3.adapter.MemoAdapter
+import com.example.simplememo3.constants.BundleKeys
 import com.example.simplememo3.databinding.FragmentListBinding
 import com.example.simplememo3.viewmodel.MemoViewModel
 
@@ -28,11 +29,11 @@ class ListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // 어댑터 생성 및 아이템 클릭 시 실행할 동작 정의
+        // 어댑터를 생성할 때 아이템 클릭 시 실행될 동작을 람다 형태로 전달
         val memoAdapter = MemoAdapter { memo ->
             val memoFragment = MemoFragment().apply {
                 arguments = Bundle().apply {
-                    putParcelable("memo", memo)
+                    putParcelable(BundleKeys.MEMO, memo)
                 }
             }
             parentFragmentManager.beginTransaction()
