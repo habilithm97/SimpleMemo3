@@ -1,5 +1,6 @@
 package com.example.simplememo3.ui.fragment
 
+import android.app.AlertDialog
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -11,6 +12,7 @@ import com.example.simplememo3.R
 import com.example.simplememo3.adapter.MemoAdapter
 import com.example.simplememo3.constants.BundleKeys
 import com.example.simplememo3.databinding.FragmentListBinding
+import com.example.simplememo3.room.Memo
 import com.example.simplememo3.viewmodel.MemoViewModel
 
 class ListFragment : Fragment() {
@@ -29,8 +31,9 @@ class ListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // 어댑터를 생성할 때 아이템 클릭 시 실행될 동작을 람다 형태로 전달
-        val memoAdapter = MemoAdapter { memo ->
+        // 어댑터 생성 및 아이템 실행 동작이 정의된 람다 전달
+        val memoAdapter = MemoAdapter(
+            onItemClick = { memo ->
             val memoFragment = MemoFragment().apply {
                 arguments = Bundle().apply {
                     putParcelable(BundleKeys.MEMO, memo)
@@ -40,7 +43,10 @@ class ListFragment : Fragment() {
                 .replace(R.id.container, memoFragment)
                 .addToBackStack(null)
                 .commit()
-        }
+        }, onItemLongClick = { memo ->
+                showDeleteDialog(memo)
+            }
+        )
         binding.apply {
             rv.apply {
                 adapter = memoAdapter
@@ -66,6 +72,18 @@ class ListFragment : Fragment() {
                 }
             }
         }
+    }
+
+    private fun showDeleteDialog(memo: Memo) {
+        AlertDialog.Builder(requireContext())
+            .setTitle("삭제")
+            .setMessage("선택한 메모를 삭제할까요 ?")
+            .setPositiveButton("삭제") { dialog, _ ->
+                memoViewModel.deleteMemo(memo)
+                dialog.dismiss()
+            }
+            .setNegativeButton("취소",null)
+            .show()
     }
 
     override fun onDestroyView() {

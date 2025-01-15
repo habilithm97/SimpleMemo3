@@ -44,6 +44,12 @@ class MemoViewModel(application: Application) : AndroidViewModel(application) {
             memoRepository.updateMemo(memo)
         }
     }
+
+    fun deleteMemo(memo: Memo) {
+        viewModelScope.launch(Dispatchers.IO) {
+            memoRepository.deleteMemo(memo)
+        }
+    }
 }
 /*
 * viewModelScope : ViewModel의 생명주기 내에서 안전하게 작업 실행

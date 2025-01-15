@@ -1,6 +1,7 @@
 package com.example.simplememo3.room
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
@@ -19,6 +20,9 @@ interface MemoDao {
 
     @Update
     suspend fun updateMemo(memo: Memo)
+
+    @Delete
+    suspend fun deleteMemo(memo: Memo)
 
     @Query("select * from memos order by id")
     fun getAll(): Flow<List<Memo>>

@@ -1,15 +1,19 @@
 package com.example.simplememo3.adapter
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import android.widget.PopupMenu
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.example.simplememo3.R
 import com.example.simplememo3.databinding.ItemMemoBinding
 import com.example.simplememo3.room.Memo
 
-// onItemClick : 아이템 클릭 시 실행될 동작을 외부에서 전달 받음
-class MemoAdapter(private val onItemClick: (Memo) -> Unit) :
+// 아이템 실행 동작을 외부에서 전달 받음
+class MemoAdapter(private val onItemClick: (Memo) -> Unit,
+                  private val onItemLongClick: (Memo) -> Unit) :
     ListAdapter<Memo, MemoAdapter.MemoViewHolder>(DIFF_CALLBACK) {
 
     inner class MemoViewHolder(private val binding: ItemMemoBinding) :
@@ -19,10 +23,29 @@ class MemoAdapter(private val onItemClick: (Memo) -> Unit) :
                 this.memo = memo
                 executePendingBindings() // 데이터 바인딩 후 즉시 UI 업데이트
 
-                // 아이템 클릭 시 전달 받은 onItemClick을 실행하여 클릭된 아이템 전달
                 root.setOnClickListener {
                     onItemClick(memo)
                 }
+                root.setOnLongClickListener {
+                    showPopupMenu(it, memo)
+                    true
+                }
+            }
+        }
+        private fun showPopupMenu(view: View, memo: Memo) {
+            PopupMenu(view.context, view).apply {
+                menuInflater.inflate(R.menu.item_context_menu, menu)
+
+                setOnMenuItemClickListener { item ->
+                    when (item.itemId) {
+                        R.id.delete -> {
+                            onItemLongClick(memo)
+                            true
+                        }
+                        else -> false
+                    }
+                }
+                show()
             }
         }
     }
