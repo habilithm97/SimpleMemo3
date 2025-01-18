@@ -1,5 +1,6 @@
 package com.example.simplememo3.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,6 +11,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.simplememo3.R
 import com.example.simplememo3.databinding.ItemMemoBinding
 import com.example.simplememo3.room.Memo
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 // 아이템 실행 동작을 외부에서 전달 받음
 class MemoAdapter(private val onItemClick: (Memo) -> Unit,
@@ -18,12 +22,15 @@ class MemoAdapter(private val onItemClick: (Memo) -> Unit,
 
     inner class MemoViewHolder(private val binding: ItemMemoBinding) :
         RecyclerView.ViewHolder(binding.root) {
+
         fun bind(memo: Memo) {
             binding.apply {
-                this.memo = memo
-                executePendingBindings() // 데이터 바인딩 후 즉시 UI 업데이트
+                // Memo 데이터를 각 뷰에 할당
+                tvContent.text = memo.content
+                tvCreateDate.text = SimpleDateFormat("yyyy.MM.dd", Locale.getDefault()).format(Date(memo.createDate))
 
                 root.setOnClickListener {
+                    Log.d("MemoAdapter", "클릭한 메모 id: ${memo.id}, content: ${memo.content}")
                     onItemClick(memo)
                 }
                 root.setOnLongClickListener {

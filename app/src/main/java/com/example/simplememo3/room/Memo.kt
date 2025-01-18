@@ -13,6 +13,7 @@ import kotlinx.parcelize.Parcelize
 @Parcelize // Parcelable 자동 구현
 @Entity(tableName = "memos")
 data class Memo(
-    @PrimaryKey(autoGenerate = true) val id: Int = 0,
-    @ColumnInfo(name = "content") var content: String
+    @PrimaryKey(autoGenerate = true) val id: Long = 0,
+    @ColumnInfo(name = "content") var content: String,
+    @ColumnInfo(name = "createDate") var createDate: Long
 ) : Parcelable // 컴포넌트 간에 데이터를 전달할 수 있도록 직렬화
