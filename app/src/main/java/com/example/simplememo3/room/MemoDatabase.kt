@@ -8,7 +8,7 @@ import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 
 // DB 구현체 자동 생성 (추상 클래스로 선언)
-@Database(entities = [Memo::class], version = 2)
+@Database(entities = [Memo::class], version = 3)
 abstract class MemoDatabase : RoomDatabase() {
     abstract fun memoDao(): MemoDao
 
@@ -23,20 +23,21 @@ abstract class MemoDatabase : RoomDatabase() {
                 val instance = Room.databaseBuilder(
                     context.applicationContext,
                     MemoDatabase::class.java, "Memo.db")
-                    .addMigrations(MIGRATION_1_2)
+                    .addMigrations(MIGRATION_2_3)
                     .build()
                 INSTANCE = instance // 새로 생성한 instance를 INSTANCE에 저장
                 instance
             }
         }
-        private val MIGRATION_1_2 = object : Migration(1, 2) {
+        private val MIGRATION_2_3 = object : Migration(2, 3) {
             override fun migrate(database: SupportSQLiteDatabase) {
                 database.execSQL("create table memos_new (" +
                         "id integer primary key autoincrement not null," +
                         "content text not null," +
-                        "createDate integer not null)")
+                        "createDate integer not null," +
+                        "updateDate integer not null)")
 
-                database.execSQL("insert into memos_new (id, content, createDate) select id, content, 0 from memos")
+                database.execSQL("insert into memos_new (id, content, createDate, updateDate) select id, content, createDate, 0 from memos")
                 database.execSQL("drop table memos")
                 database.execSQL("alter table memos_new rename to memos")
             }

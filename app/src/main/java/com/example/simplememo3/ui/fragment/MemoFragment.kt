@@ -74,7 +74,7 @@ class MemoFragment : Fragment() {
 
     private fun newMemo(memoStr: String) {
         val date = System.currentTimeMillis()
-        val memo = Memo(content = memoStr, createDate = date)
+        val memo = Memo(content = memoStr, createDate = date, updateDate = date)
         memoViewModel.insertMemo(memo)
     }
 
