@@ -16,5 +16,5 @@ data class Memo(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
     @ColumnInfo(name = "content") var content: String,
     @ColumnInfo(name = "createDate") var createDate: Long,
-    @ColumnInfo(name = "updateDate") var updateDate: Long,
+    @ColumnInfo(name = "updateDate") var updateDate: Long
 ) : Parcelable // 컴포넌트 간에 데이터를 전달할 수 있도록 직렬화

@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment
 import com.example.simplememo3.R
 import com.example.simplememo3.databinding.ActivityMainBinding
 import com.example.simplememo3.ui.fragment.ListFragment
+import com.example.simplememo3.ui.fragment.MemoFragment
 
 class MainActivity : AppCompatActivity() {
     private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
@@ -79,6 +80,20 @@ class MainActivity : AppCompatActivity() {
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.options_menu, menu)
         return true
+    }
+
+    override fun onPrepareOptionsMenu(menu: Menu): Boolean {
+        // 현재 활성화된 프래그먼트에 따라 메뉴를 동적으로 변경
+        val currentFragment = supportFragmentManager.findFragmentById(R.id.container)
+
+        if (currentFragment is ListFragment) {
+            menu.clear()
+            menuInflater.inflate(R.menu.list_fragment_options, menu)
+        } else if (currentFragment is MemoFragment) {
+            menu.clear()
+            menuInflater.inflate(R.menu.memo_fragment_options, menu)
+        }
+        return super.onPrepareOptionsMenu(menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
