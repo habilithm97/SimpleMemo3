@@ -16,6 +16,7 @@ import com.example.simplememo3.ui.fragment.MemoFragment
 
 class MainActivity : AppCompatActivity() {
     private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
+    private var sortOrder = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -89,6 +90,17 @@ class MainActivity : AppCompatActivity() {
         if (currentFragment is ListFragment) {
             menu.clear()
             menuInflater.inflate(R.menu.list_fragment_options, menu)
+
+            val createDateItem = menu.findItem(R.id.createDate)
+            val updateDateItem = menu.findItem(R.id.updateDate)
+
+            if (sortOrder) {
+                createDateItem.setIcon(R.drawable.check)
+                updateDateItem.setIcon(null)
+            } else {
+                createDateItem.setIcon(null)
+                updateDateItem.setIcon(R.drawable.check)
+            }
         } else if (currentFragment is MemoFragment) {
             menu.clear()
             menuInflater.inflate(R.menu.memo_fragment_options, menu)
@@ -99,9 +111,17 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.createDate -> {
+                if (!sortOrder) {
+                    sortOrder = true
+                    invalidateOptionsMenu()
+                }
                 true
             }
             R.id.updateDate -> {
+                if (sortOrder) {
+                    sortOrder = false
+                    invalidateOptionsMenu()
+                }
                 true
             }
             else -> super.onOptionsItemSelected(item)
