@@ -14,9 +14,6 @@ import com.example.simplememo3.databinding.FragmentMemoBinding
 import com.example.simplememo3.room.Memo
 import com.example.simplememo3.ui.activity.MainActivity
 import com.example.simplememo3.viewmodel.MemoViewModel
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
 
 class MemoFragment : Fragment() {
     private var _binding: FragmentMemoBinding? = null
@@ -74,13 +71,14 @@ class MemoFragment : Fragment() {
 
     private fun newMemo(memoStr: String) {
         val date = System.currentTimeMillis()
-        val memo = Memo(content = memoStr, createDate = date, updateDate = date)
+        val memo = Memo(content = memoStr, date  = date)
         memoViewModel.insertMemo(memo)
     }
 
     private fun updateMemo(memoStr: String) {
+        val date = System.currentTimeMillis()
         // 기존 memo 객체의 content만 수정하여 새로운 객체 생성
-        val updatedMemo = previousMemo?.copy(content = memoStr)
+        val updatedMemo = previousMemo?.copy(content = memoStr, date = date)
 
         if (updatedMemo != null) {
             memoViewModel.updateMemo(updatedMemo)

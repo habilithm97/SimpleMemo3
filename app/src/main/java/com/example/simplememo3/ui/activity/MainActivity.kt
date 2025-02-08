@@ -1,8 +1,6 @@
 package com.example.simplememo3.ui.activity
 
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuItem
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -12,11 +10,9 @@ import androidx.fragment.app.Fragment
 import com.example.simplememo3.R
 import com.example.simplememo3.databinding.ActivityMainBinding
 import com.example.simplememo3.ui.fragment.ListFragment
-import com.example.simplememo3.ui.fragment.MemoFragment
 
 class MainActivity : AppCompatActivity() {
     private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
-    private var sortOrder = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -76,55 +72,5 @@ class MainActivity : AppCompatActivity() {
         supportFragmentManager.beginTransaction()
             .replace(R.id.container, fragment)
             .commit()
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.options_menu, menu)
-        return true
-    }
-
-    override fun onPrepareOptionsMenu(menu: Menu): Boolean {
-        // 현재 활성화된 프래그먼트에 따라 메뉴를 동적으로 변경
-        val currentFragment = supportFragmentManager.findFragmentById(R.id.container)
-
-        if (currentFragment is ListFragment) {
-            menu.clear()
-            menuInflater.inflate(R.menu.list_fragment_options, menu)
-
-            val createDateItem = menu.findItem(R.id.createDate)
-            val updateDateItem = menu.findItem(R.id.updateDate)
-
-            if (sortOrder) {
-                createDateItem.setIcon(R.drawable.check)
-                updateDateItem.setIcon(null)
-            } else {
-                createDateItem.setIcon(null)
-                updateDateItem.setIcon(R.drawable.check)
-            }
-        } else if (currentFragment is MemoFragment) {
-            menu.clear()
-            menuInflater.inflate(R.menu.memo_fragment_options, menu)
-        }
-        return super.onPrepareOptionsMenu(menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.createDate -> {
-                if (!sortOrder) {
-                    sortOrder = true
-                    invalidateOptionsMenu()
-                }
-                true
-            }
-            R.id.updateDate -> {
-                if (sortOrder) {
-                    sortOrder = false
-                    invalidateOptionsMenu()
-                }
-                true
-            }
-            else -> super.onOptionsItemSelected(item)
-        }
     }
 }
