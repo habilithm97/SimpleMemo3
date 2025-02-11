@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.simplememo3.R
@@ -63,14 +64,24 @@ class ListFragment : Fragment() {
                     .commit()
             }
             memoViewModel.getAll.observe(viewLifecycleOwner) {
-                // 어댑터에 새로운 리스트 제출
-                memoAdapter.submitList(it) {
-                    val itemCount = memoAdapter.itemCount
+                memoAdapter.apply {
+                    submitMemoList(it) // 원본 데이터 전달
                     if (itemCount > 0) {
                         rv.smoothScrollToPosition(itemCount - 1)
                     }
                 }
             }
+            sv.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+                // 검색어 입력 시 호출
+                override fun onQueryTextChange(newText: String?): Boolean {
+                    memoAdapter.filterList(newText ?: "") // null이면 "" 사용
+                    return true
+                }
+                // 키보드 검색 버튼 클릭 시 호출
+                override fun onQueryTextSubmit(query: String?): Boolean {
+                    return false
+                }
+            })
         }
     }
 

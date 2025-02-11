@@ -20,6 +20,24 @@ class MemoAdapter(private val onItemClick: (Memo) -> Unit,
                   private val onItemLongClick: (Memo) -> Unit
 ) : ListAdapter<Memo, MemoAdapter.MemoViewHolder>(DIFF_CALLBACK) {
 
+    private var memoList: List<Memo> = emptyList() // 원본 데이터 저장
+
+    fun submitMemoList(list: List<Memo>) {
+        memoList = list // 원본 데이터 저장
+        submitList(list)
+    }
+
+    fun filterList(query: String) {
+        val filteredList = if (query.isEmpty()) {
+            memoList
+        } else {
+            memoList.filter {
+                it.content.contains(query, ignoreCase = true) // 대소문자 구분 없이 검색
+            }
+        }
+            submitList(filteredList)
+    }
+
     inner class MemoViewHolder(private val binding: ItemMemoBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
