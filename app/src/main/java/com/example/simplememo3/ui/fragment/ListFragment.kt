@@ -74,7 +74,19 @@ class ListFragment : Fragment() {
             sv.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
                 // 검색어 입력 시 호출
                 override fun onQueryTextChange(newText: String?): Boolean {
-                    memoAdapter.filterList(newText ?: "") // null이면 "" 사용
+                    memoAdapter.apply {
+                        filterList(newText.orEmpty()) { // null이면 "" 사용
+                            if (newText.isNullOrEmpty()) { // 검색어가 없으면
+                                rv.apply {
+                                    post { // UI 업데이트 후 실행 보장 (UI 스레드에 작업 예약)
+                                        if (memoAdapter.itemCount > 0) {
+                                            smoothScrollToPosition(memoAdapter.itemCount - 1)
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
                     return true
                 }
                 // 키보드 검색 버튼 클릭 시 호출

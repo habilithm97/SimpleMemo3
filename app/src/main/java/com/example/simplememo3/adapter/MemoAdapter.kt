@@ -27,15 +27,17 @@ class MemoAdapter(private val onItemClick: (Memo) -> Unit,
         submitList(list)
     }
 
-    fun filterList(query: String) {
+    fun filterList(query: String, onFilterComplete: () -> Unit) {
         val filteredList = if (query.isEmpty()) {
             memoList
         } else {
             memoList.filter {
-                it.content.contains(query, ignoreCase = true) // 대소문자 구분 없이 검색
+                it.content.contains(query, ignoreCase = true)
             }
         }
-            submitList(filteredList)
+        submitList(filteredList) {
+            onFilterComplete() // 필터링 후속 작업
+        }
     }
 
     inner class MemoViewHolder(private val binding: ItemMemoBinding) :
