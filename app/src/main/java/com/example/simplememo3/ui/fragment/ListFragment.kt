@@ -32,23 +32,25 @@ class ListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // 어댑터 생성 및 아이템 실행 동작이 정의된 람다 전달
-        val memoAdapter = MemoAdapter(
-            onItemClick = { memo ->
-            val memoFragment = MemoFragment().apply {
-                arguments = Bundle().apply {
-                    putParcelable(BundleKeys.MEMO, memo)
-                }
-            }
-            parentFragmentManager.beginTransaction()
-                .replace(R.id.container, memoFragment)
-                .addToBackStack(null)
-                .commit()
-        }, onItemLongClick = { memo ->
-                showDeleteDialog(memo)
-            }
-        )
         binding.apply {
+            // 어댑터 생성 및 아이템 실행 동작이 정의된 람다 전달
+            val memoAdapter = MemoAdapter(
+                onItemClick = { memo ->
+                    sv.setQuery("", false) // 검색어 초기화
+
+                    val memoFragment = MemoFragment().apply {
+                        arguments = Bundle().apply {
+                            putParcelable(BundleKeys.MEMO, memo)
+                        }
+                    }
+                    parentFragmentManager.beginTransaction()
+                        .replace(R.id.container, memoFragment)
+                        .addToBackStack(null)
+                        .commit()
+                }, onItemLongClick = { memo ->
+                    showDeleteDialog(memo)
+                }
+            )
             rv.apply {
                 adapter = memoAdapter
                 layoutManager = LinearLayoutManager(requireContext()).apply {
@@ -58,6 +60,8 @@ class ListFragment : Fragment() {
                 setHasFixedSize(true) // 아이템 크기 고정 -> 성능 최적화
             }
             fab.setOnClickListener {
+                sv.setQuery("", false) // 검색어 초기화
+
                 parentFragmentManager.beginTransaction()
                     .replace(R.id.container, MemoFragment())
                     .addToBackStack(null) // 백 스택에 추가
@@ -76,11 +80,11 @@ class ListFragment : Fragment() {
                 override fun onQueryTextChange(newText: String?): Boolean {
                     memoAdapter.apply {
                         filterList(newText.orEmpty()) { // null이면 "" 사용
-                            if (newText.isNullOrEmpty()) { // 검색어가 없으면
+                            if (newText.isNullOrEmpty()) { // 검색어가 없을 시
                                 rv.apply {
                                     post { // UI 업데이트 후 실행 보장 (UI 스레드에 작업 예약)
-                                        if (memoAdapter.itemCount > 0) {
-                                            smoothScrollToPosition(memoAdapter.itemCount - 1)
+                                        if (itemCount > 0) {
+                                            smoothScrollToPosition(itemCount - 1)
                                         }
                                     }
                                 }

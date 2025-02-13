@@ -32,7 +32,7 @@ class MemoAdapter(private val onItemClick: (Memo) -> Unit,
             memoList
         } else {
             memoList.filter {
-                it.content.contains(query, ignoreCase = true)
+                it.content.contains(query, ignoreCase = true) // 대소문자 구분 없이 검색
             }
         }
         submitList(filteredList) {
