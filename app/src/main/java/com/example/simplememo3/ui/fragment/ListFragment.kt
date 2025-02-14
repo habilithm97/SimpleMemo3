@@ -80,12 +80,10 @@ class ListFragment : Fragment() {
                 override fun onQueryTextChange(newText: String?): Boolean {
                     memoAdapter.apply {
                         filterList(newText.orEmpty()) { // null이면 "" 사용
-                            if (newText.isNullOrEmpty()) { // 검색어가 없을 시
-                                rv.apply {
-                                    post { // UI 업데이트 후 실행 보장 (UI 스레드에 작업 예약)
-                                        if (itemCount > 0) {
-                                            smoothScrollToPosition(itemCount - 1)
-                                        }
+                            rv.apply {
+                                post { // UI 업데이트 후 실행 보장 (UI 스레드에 작업 예약)
+                                    if (itemCount > 0) {
+                                        smoothScrollToPosition(itemCount - 1)
                                     }
                                 }
                             }
