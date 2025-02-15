@@ -1,10 +1,15 @@
 package com.example.simplememo3.adapter
 
+import android.os.Build
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupMenu
+import androidx.appcompat.view.menu.MenuBuilder
+import androidx.appcompat.view.menu.MenuPopupHelper
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -72,6 +77,10 @@ class MemoAdapter(private val onItemClick: (Memo) -> Unit,
                         }
                         else -> false
                     }
+                }
+                // 아이콘 강제 표시
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                    setForceShowIcon(true)
                 }
                 show()
             }
