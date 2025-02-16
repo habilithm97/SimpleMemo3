@@ -47,8 +47,16 @@ class ListFragment : Fragment() {
                         .replace(R.id.container, memoFragment)
                         .addToBackStack(null)
                         .commit()
-                }, onItemLongClick = { memo ->
-                    showDeleteDialog(memo)
+                }, onItemLongClick = { memo, action ->
+                    when (action) {
+                        MemoAdapter.Action.DELETE -> showDeleteDialog(memo)
+                        MemoAdapter.Action.LOCK -> {
+                            parentFragmentManager.beginTransaction()
+                                .replace(R.id.container, PasswordFragment())
+                                .addToBackStack(null)
+                                .commit()
+                        }
+                    }
                 }
             )
             rv.apply {

@@ -6,4 +6,18 @@
     </style>
 
     <style name="Theme.SimpleMemo3" parent="Base.Theme.SimpleMemo3" />
+
+    <style name="PasswordDot">
+        <item name="android:layout_width">16dp</item>
+        <item name="android:layout_height">16dp</item>
+        <item name="android:background">@drawable/dot_selector</item>
+        <item name="android:layout_margin">8dp</item>
+    </style>
+
+    <style name="KeypadButton">
+        <item name="android:layout_width">60dp</item>
+        <item name="android:layout_height">60dp</item>
+        <item name="android:textSize">24sp</item>
+        <item name="android:background">?attr/selectableItemBackground</item>
+    </style>
 </resources>

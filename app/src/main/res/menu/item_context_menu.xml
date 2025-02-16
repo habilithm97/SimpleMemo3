@@ -4,4 +4,8 @@
         android:id="@+id/delete"
         android:icon="@drawable/delete"
         android:title="삭제" />
+    <item
+        android:id="@+id/lock"
+        android:icon="@drawable/lock"
+        android:title="잠금" />
 </menu>

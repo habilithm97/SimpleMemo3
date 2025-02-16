@@ -3,13 +3,9 @@ package com.example.simplememo3.adapter
 import android.os.Build
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupMenu
-import androidx.appcompat.view.menu.MenuBuilder
-import androidx.appcompat.view.menu.MenuPopupHelper
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -22,7 +18,7 @@ import java.util.Locale
 
 // 아이템 실행 동작을 외부에서 전달 받음
 class MemoAdapter(private val onItemClick: (Memo) -> Unit,
-                  private val onItemLongClick: (Memo) -> Unit
+                  private val onItemLongClick: (Memo, Action) -> Unit
 ) : ListAdapter<Memo, MemoAdapter.MemoViewHolder>(DIFF_CALLBACK) {
 
     private var memoList: List<Memo> = emptyList() // 원본 데이터 저장
@@ -44,6 +40,8 @@ class MemoAdapter(private val onItemClick: (Memo) -> Unit,
             onFilterComplete() // 필터링 후속 작업
         }
     }
+
+    enum class Action { DELETE, LOCK }
 
     inner class MemoViewHolder(private val binding: ItemMemoBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -69,18 +67,22 @@ class MemoAdapter(private val onItemClick: (Memo) -> Unit,
             PopupMenu(view.context, view).apply {
                 menuInflater.inflate(R.menu.item_context_menu, menu)
 
+                // 아이콘 강제 표시
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                    setForceShowIcon(true)
+                }
                 setOnMenuItemClickListener { item ->
                     when (item.itemId) {
                         R.id.delete -> {
-                            onItemLongClick(memo)
+                            onItemLongClick(memo, Action.DELETE)
+                            true
+                        }
+                        R.id.lock -> {
+                            onItemLongClick(memo, Action.LOCK)
                             true
                         }
                         else -> false
                     }
-                }
-                // 아이콘 강제 표시
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                    setForceShowIcon(true)
                 }
                 show()
             }
