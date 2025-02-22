@@ -13,7 +13,7 @@ abstract class PasswordDatabase : RoomDatabase() {
         @Volatile
         private var INSTANCE: PasswordDatabase? = null
 
-        fun getDatabase(context: Context): PasswordDatabase {
+        fun getInstance(context: Context): PasswordDatabase {
             return INSTANCE ?: synchronized(this) {
                 val instance = Room.databaseBuilder(
                     context.applicationContext,
