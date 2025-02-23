@@ -49,6 +49,8 @@ class MemoFragment : Fragment() {
     override fun onResume() {
         super.onResume()
 
+        requireActivity().invalidateOptionsMenu() // 옵션 메뉴 업데이트
+
         binding.edtMemo.requestFocus()
         val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.showSoftInput(binding.edtMemo, InputMethodManager.SHOW_IMPLICIT)
